@@ -30,8 +30,8 @@ public class MovieCatalogResource {
     @GetMapping("/{userID}")
     public List<CatalogItem> getCatalog(@PathVariable("userID") String userID){
 
-
-        UserRatings userRatings = restTemplate.getForObject("http://localhost:8095/ratings-data/users/".concat(userID), UserRatings.class);
+        //En lugar de pasar la URL se le pasa el nombre del servicio como está registrado en el servidor
+        UserRatings userRatings = restTemplate.getForObject("http://movie-ratings-service/ratings-data/users/".concat(userID), UserRatings.class);
 
         //Respuesta resultante de la llamada al servicio de ratings (movie-ratings-service)
         //List<Rating> ratingList = Arrays.asList(new Rating("M1", 5), new Rating("M2",3));
@@ -42,7 +42,7 @@ public class MovieCatalogResource {
         //Necesita tener el constructor SIN ARGUMENTOS
         List<CatalogItem> catalog = ratingList.stream().map((rating -> {
             //Movie movie = restTemplate.getForObject("http://localhost:8090/movies/".concat(rating.getMovieId()), Movie.class);
-        Movie movie = webClientBuilder.build().get().uri("htto://localhost:8090/movies/".concat(rating.getMovieId()))
+        Movie movie = webClientBuilder.build().get().uri("htto://movie-info-service/movies/".concat(rating.getMovieId()))
                     .retrieve()
                     .bodyToMono(Movie.class)
                     .block();
